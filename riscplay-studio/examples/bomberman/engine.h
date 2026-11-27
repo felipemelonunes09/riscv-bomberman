@@ -7,11 +7,18 @@ typedef struct {
 } Engine;
 
 // ppu format: .insn r opcode, funct3, funct7, rd, rs1, rs2 (??) * - *
-void process_pixelUnit()
+// insn     - it`s a directive to tell the assembler to genererate a machine instruction manually
+// r        - it`s a type of instruction (r-type, i-type, s-type, b-type, u-type, j-type) 
+// 
+static void ppu_command(uint32_t rs1, uint32_t rs2)
 {
-    __asm__ volatile(".insn ")
+    __asm__ volatile(
+        ".insn r 0x2B, 0x0, 0x00, x0, %0, %1"
+        :
+        : "r"(rs1), "r"(rs2)
+        : "memory"
+    );
 }
-
 void engine_init(Engine *engine);
 void engine_draw(Engine *engine);
 void engine_flip(Engine *engine);

@@ -1,14 +1,15 @@
 #ifndef CONTEXT_RISCPLAY_GAME_H
 #define CONTEXT_RISCPLAY_GAME_H
 
+#include "assets.h"
 
 typedef struct {
     int x;
     int y;
+    AssetState asset;                         
 } Character;
 
 typedef struct {
-
 } Map;
 
 typedef struct {

@@ -34,6 +34,8 @@ HEADERS := $(wildcard $(PROJECT_DIR)/*.h) $(wildcard $(SDK_DIR)/*.h)
 ELF := $(BUILD_DIR)/bomberman.elf
 BIN := $(BUILD_DIR)/bomberman.bin
 PACKAGE := $(SERVER_BUILD_DIR)/bomberman.json.prog
+PLAYER_IDLE_PNG := $(abspath $(ROOT)/../assets/walk/right/1.png)
+PACKAGE_BUILDER := $(ROOT)/build_bomberman_package.py
 
 .PHONY: all check-toolchain clean
 
@@ -58,9 +60,9 @@ $(BIN): $(ELF)
 		exit 1; \
 	fi
 
-$(PACKAGE): $(BIN) | check-toolchain
+$(PACKAGE): $(BIN) $(PLAYER_IDLE_PNG) $(PACKAGE_BUILDER) $(ROOT)/asset_manager.py | check-toolchain
 	@mkdir -p "$(SERVER_BUILD_DIR)"
-	python3 -c 'import json,pathlib,uuid; binary=pathlib.Path("$(BIN)").read_bytes(); package=[{"comp_uuid":str(uuid.uuid5(uuid.NAMESPACE_URL,"riscplay-studio/bomberman")),"type":0,"addr":"20000000","addr_mem":"20000000","value":binary.hex()}]; pathlib.Path("$@").write_text(json.dumps(package,separators=(",",":"))+"\n",encoding="utf-8")'
+	python3 "$(PACKAGE_BUILDER)" "$(BIN)" "$(PLAYER_IDLE_PNG)" "$@"
 	@echo "Pacote disponível em /builds/bomberman.json.prog"
 
 clean:

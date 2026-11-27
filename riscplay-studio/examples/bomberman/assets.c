@@ -1,10 +1,27 @@
 #include "assets.h"
 
 const Asset assets[ASSET_COUNT] = {
-    [ASSET_PLAYER_IDLE] = {
-        .palette    = 0x100000u,
-        .pixels     = 0x100100u,
-        .width      = 16,
-        .height     = 24
-    }
+    [ASSET_CHAR_WALK_LEFT_0]  = {0x100000u, 0x100100u, 16, 24},
+    [ASSET_CHAR_WALK_LEFT_1]  = {0x100160u, 0x100260u, 16, 24},
+    [ASSET_CHAR_WALK_LEFT_2]  = {0x1002C0u, 0x1003C0u, 16, 24},
+
+    [ASSET_CHAR_WALK_RIGHT_0] = {0x100420u, 0x100520u, 16, 24},
+    [ASSET_CHAR_WALK_RIGHT_1] = {0x100580u, 0x100680u, 16, 24},
+    [ASSET_CHAR_WALK_RIGHT_2] = {0x1006E0u, 0x1007E0u, 16, 24},
+
+    [ASSET_CHAR_WALK_DOWN_0]  = {0x100840u, 0x100940u, 16, 24},
+    [ASSET_CHAR_WALK_DOWN_1]  = {0x1009A0u, 0x100AA0u, 16, 24},
+    [ASSET_CHAR_WALK_DOWN_2]  = {0x100B00u, 0x100C00u, 16, 24},
+
+    [ASSET_CHAR_WALK_UP_0]    = {0x100C60u, 0x100D60u, 16, 24},
+    [ASSET_CHAR_WALK_UP_1]    = {0x100DC0u, 0x100EC0u, 16, 24},
+    [ASSET_CHAR_WALK_UP_2]    = {0x100F20u, 0x101020u, 16, 24},
+
+    [ASSET_CHAR_DEAD_0]       = {0x101080u, 0x101180u, 16, 24},
+    [ASSET_CHAR_DEAD_1]       = {0x1011E0u, 0x1012E0u, 16, 24},
+    [ASSET_CHAR_DEAD_2]       = {0x101340u, 0x101440u, 16, 24},
+    [ASSET_CHAR_DEAD_3]       = {0x1014A0u, 0x1015A0u, 16, 24},
+    [ASSET_CHAR_DEAD_4]       = {0x101600u, 0x101700u, 16, 24},
+    [ASSET_CHAR_DEAD_5]       = {0x101760u, 0x101860u, 16, 24},
+    [ASSET_CHAR_DEAD_6]       = {0x1018C0u, 0x1019C0u, 16, 24}
 };

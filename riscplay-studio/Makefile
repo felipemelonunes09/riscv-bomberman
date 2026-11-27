@@ -34,7 +34,8 @@ HEADERS := $(wildcard $(PROJECT_DIR)/*.h) $(wildcard $(SDK_DIR)/*.h)
 ELF := $(BUILD_DIR)/bomberman.elf
 BIN := $(BUILD_DIR)/bomberman.bin
 PACKAGE := $(SERVER_BUILD_DIR)/bomberman.json.prog
-PLAYER_IDLE_PNG := $(abspath $(ROOT)/../assets/walk/right/1.png)
+ASSETS_DIR := $(abspath $(ROOT)/../assets)
+ASSET_PNGS := $(shell find "$(ASSETS_DIR)" -type f -name '*.png' 2>/dev/null)
 PACKAGE_BUILDER := $(ROOT)/build_bomberman_package.py
 
 .PHONY: all check-toolchain clean
@@ -60,9 +61,9 @@ $(BIN): $(ELF)
 		exit 1; \
 	fi
 
-$(PACKAGE): $(BIN) $(PLAYER_IDLE_PNG) $(PACKAGE_BUILDER) $(ROOT)/asset_manager.py | check-toolchain
+$(PACKAGE): $(BIN) $(ASSET_PNGS) $(PACKAGE_BUILDER) $(ROOT)/asset_manager.py | check-toolchain
 	@mkdir -p "$(SERVER_BUILD_DIR)"
-	python3 "$(PACKAGE_BUILDER)" "$(BIN)" "$(PLAYER_IDLE_PNG)" "$@"
+	python3 "$(PACKAGE_BUILDER)" "$(BIN)" "$@"
 	@echo "Pacote disponível em /builds/bomberman.json.prog"
 
 clean:

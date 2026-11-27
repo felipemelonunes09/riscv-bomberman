@@ -52,7 +52,7 @@ function silence(){for(const s of audioSources){try{s.stop();}catch{}}audioSourc
 function startGame(){if(!project.package?.length)return;decodePackage(project.package);generation++;ready=false;busy=false;paused=false;keyboard=touch=0;lastButtons=-1;silence();worker.postMessage({type:'load',generation,package:project.package});$('pause').textContent='Ⅱ Pausar';$('run-dot').style.background='var(--accent)';}
 async function selectProject(id,restore=true){
   clearTimeout(buildTimer);if(project)await persist();
-  const prior=restore?await stored(id):null;
+  const prior=(restore&&id!=='bomberman')?await stored(id):null;
   if(prior)project=prior;
   else{
     const response=await fetch('examples/'+id+'.json');if(!response.ok)throw Error('Exemplo indisponível.');const ex=await response.json();
@@ -196,4 +196,4 @@ $('header-download').onclick=()=>{if(!project.header)return toast('Importe uma i
 $('help').onclick=()=>$('help-dialog').showModal();$('close-help').onclick=()=>$('help-dialog').close();
 addEventListener('beforeunload',()=>{if(project)persist();});
 try{const status=await (await fetch('/api/status')).json();$('compiler-state').textContent=status.compiler?' GCC disponível.':' GCC não encontrado no PC.';}catch{$('compiler-state').textContent='Abra pelo servidor Python para editar e compilar.';}
-try{const id=localStorage.getItem('rp-last')||'flappybird';$('project').value=['flappybird','hollow','mandelbrot','starter'].includes(id)?id:'flappybird';await selectProject($('project').value);}catch(e){diagnostic('Não foi possível iniciar.','error',e.message);}
+try{const id=localStorage.getItem('rp-last')||'flappybird';$('project').value=['flappybird','hollow','mandelbrot','bomberman','starter'].includes(id)?id:'flappybird';await selectProject($('project').value);}catch(e){diagnostic('Não foi possível iniciar.','error',e.message);}

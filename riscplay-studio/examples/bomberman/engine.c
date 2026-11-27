@@ -1,5 +1,6 @@
 #include "engine.h"
 #include "context.h"
+#include "bomberman_audio.h"
 
 static const uint32_t FRAMEBUFFER = 0xA080u;
 static const uint32_t DARK_BLUE = 0xFF080C18u;
@@ -61,15 +62,86 @@ void engine_draw(Engine *engine) {
 
     Character *player = &engine->ctx->player;
     const Asset *player_asset;
+    uint32_t fill_command;
 
-    if ((unsigned)player->asset >= ASSET_COUNT) return;
-    player_asset = &assets[player->asset];
-    engine_drawAsset(player_asset, player->x, player->y);   
+    fill_command = 0x30000000u | (FRAMEBUFFER << 7);
+    process_pixelUnit(fill_command, DARK_BLUE);
+    wait_pixelUnit();
 
+    if ((unsigned)player->asset < ASSET_COUNT) {
+        player_asset = &assets[player->asset];
+        engine_drawAsset(player_asset, player->x, player->y);
+    }
+
+    wait_pixelUnit();
+    select_framebuffer(FRAMEBUFFER);
+}
+
+static uint16_t engine_input(void)
+{
+    uint32_t value;
+    __asm__ volatile("lw %0, 12(x0)" : "=r"(value));
+    return (uint16_t)((~value >> 16) & 0xFFFFu);
 }
 
 void engine_flip(Engine *engine) {
-    // Implement flip logic here using engine->ctx
+    Character *player = &engine->ctx->player;
+    uint16_t input = engine_input();
+
+    player->moving = 0;
+
+    if (input & (1u << 7)) {
+        player->x -= 2;
+        player->direction = 1;
+        player->facing = -1;
+        player->moving = 1;
+    }
+    if (input & (1u << 5)) {
+        player->x += 2;
+        player->direction = 2;
+        player->facing = 1;
+        player->moving = 1;
+    }
+    if (input & (1u << 4)) {
+        player->y -= 2;
+        player->direction = 3;
+        player->moving = 1;
+    }
+    if (input & (1u << 6)) {
+        player->y += 2;
+        player->direction = 4;
+        player->moving = 1;
+    }
+
+    if (player->x < 0) player->x = 0;
+    if (player->x > 320 - CHAR_WIDTH) player->x = 320 - CHAR_WIDTH;
+    if (player->y < 0) player->y = 0;
+    if (player->y > 180 - CHAR_HEIGHT) player->y = 180 - CHAR_HEIGHT;
+
+    if (player->moving) {
+        unsigned animation = (player->frame / 8u) % 3u;
+        if (player->direction == 1)
+            player->asset = ASSET_CHAR_WALK_LEFT_0 + animation;
+        else if (player->direction == 2)
+            player->asset = ASSET_CHAR_WALK_RIGHT_0 + animation;
+        else if (player->direction == 3)
+            player->asset = ASSET_CHAR_WALK_UP_0 + animation;
+        else
+            player->asset = ASSET_CHAR_WALK_DOWN_0 + animation;
+        player->frame++;
+        if ((player->frame % 16u) == 0)
+            bomberman_audio_walk();
+    } else {
+        player->frame = 0;
+        if (player->direction == 1)
+            player->asset = ASSET_CHAR_WALK_LEFT_0;
+        else if (player->direction == 2)
+            player->asset = ASSET_CHAR_WALK_RIGHT_0;
+        else if (player->direction == 3)
+            player->asset = ASSET_CHAR_WALK_UP_0;
+        else
+            player->asset = ASSET_CHAR_WALK_DOWN_0;
+    }
 }
 
 void engine_init(Engine *engine) {

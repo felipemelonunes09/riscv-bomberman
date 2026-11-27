@@ -1,5 +1,6 @@
 #ifndef ENGINE_RISCPLAY_GAME_H
 #define ENGINE_RISCPLAY_GAME_H
+#include <stdint.h>
 #include "context.h"
 
 typedef struct {
@@ -14,12 +15,6 @@ typedef struct {
 // 0x00     - Inside opcode this is a specialized function 
 // %0       - Register
 // %1       - Register
-void process_pixelUnit(uint32_t rs1, uint32_t rs2)
-{
-    __asm__ volatile(
-        ".insn r 0x2B, 0x0, 0x00, x0, %0, %1" : : "r"(rs1), "r"(rs2) : "memory"
-    );
-}
 
 void engine_init(Engine *engine);
 void engine_draw(Engine *engine);

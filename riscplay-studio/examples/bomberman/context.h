@@ -6,7 +6,11 @@
 typedef struct {
     int x;
     int y;
-    AssetState asset;                         
+    AssetState asset;
+    int facing;
+    int direction;
+    unsigned frame;
+    unsigned moving;
 } Character;
 
 typedef struct {

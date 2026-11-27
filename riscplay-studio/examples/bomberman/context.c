@@ -10,5 +10,10 @@ Context* context_create(void) {
 
     context.player.asset = ASSET_PLAYER_IDLE;
 
+    context.player.facing = 1;
+    context.player.direction = 2;
+    context.player.frame = 0;
+    context.player.moving = 0;
+
     return &context;
-}   
+}

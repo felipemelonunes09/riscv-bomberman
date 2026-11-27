@@ -2,7 +2,7 @@
 #include "context.h"
 
 static const uint32_t FRAMEBUFFER = 0xA080u;
-static const uint32_t DARK_BLUE = 0xFFFF0000u;
+static const uint32_t DARK_BLUE = 0xFF080C18u;
 
 Context* engine_createContext() {
     return context_create();

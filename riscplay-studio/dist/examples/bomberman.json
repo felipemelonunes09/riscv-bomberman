@@ -1,0 +1,7 @@
+{
+    "id": "bomberman",
+    "title": "Bomberman",
+    "files": {
+        "main.c": "#include <stdio.h>"
+    }
+}
